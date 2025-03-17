@@ -4,12 +4,12 @@ export type RootStackParamList = {
     Home: undefined; // No parameters
     About: undefined; // No parameters
   };
-export default function HomeScreen({navigation}:any)
+export default function SettingsScreen({navigation}:any)
 {
     //const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     return(
         <View style={styles.container}>
-            <Text style={styles.text}>Home Screen</Text>
+            <Text style={styles.text}>Settings Screen</Text>
             <Button title="Go to About" onPress={()=> navigation.navigate("About",
                 {
                     name:"Dara"
