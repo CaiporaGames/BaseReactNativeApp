@@ -1,47 +1,99 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { registerRootComponent } from 'expo';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 
-import HomeScreen from '../screens/HomeScreen';
-import AboutScreen from '../screens/AboutScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import { View, Text, StyleSheet, Button, KeyboardAvoidingView } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 
-// Create the stack and drawer navigators
-const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator();
 
-// Drawer navigator with screens that should have the drawer
-function DrawerNavigator() {
+function App() 
+{
+  const [userName, setUserName] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  const [errors, setErrors] = useState<{ userName?: string; password?: string }>({});
+
+
+  const validateForm = () => 
+  {
+    let errors: { userName?: string; userPassword?: string } = {};
+    if(!userName) errors.userName = "User name is required!";
+    if(!userPassword) errors.userPassword = "Password is required!";
+
+    setErrors(errors);
+
+    return Object.keys(errors).length === 0;
+  }
+
   return (
-    <Drawer.Navigator>
-      <Drawer.Screen name="Home" component={HomeScreen} />
-      <Drawer.Screen name="Settings" component={SettingsScreen} />
-    </Drawer.Navigator>
-  );
-}
-
-// Root stack navigator, which contains the drawer
-function RootStack() {
-  return (
-    <Stack.Navigator>
-      {/* Drawer is nested inside the Stack */}
-      <Stack.Screen name="Main" component={DrawerNavigator} />
-      {/* Other screens that should not show the drawer */}
-      <Stack.Screen name="About" component={AboutScreen} />
-    </Stack.Navigator>
-  );
-}
-
-// Main App component
-function App() {
-  return (
-    <NavigationContainer>
-      <RootStack />
-    </NavigationContainer>
+    <KeyboardAvoidingView style={styles.container}>
+      <View style={styles.form}>
+        <Text style={styles.label}>Username:</Text>
+        <TextInput  
+          style={styles.input} 
+          placeholder='Enter your name...'
+          value={userName}
+          onChangeText={setUserName}
+          />
+        {
+          errors.userName ? <Text style={styles.errorText}>{errors.userName}</Text> : null
+        }
+        <Text  style={styles.label}>Password:</Text>
+        <TextInput 
+          style={styles.input} 
+          placeholder='Enter your password...' 
+          secureTextEntry
+          value={userPassword}
+          onChangeText={setUserPassword}
+          />
+        {
+          errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null
+        }
+        <Button title="Login" onPress={()=>{}} />
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
 // Register the root component
 registerRootComponent(App);
+
+const styles = StyleSheet.create({
+    container:{
+        flex:1,
+        justifyContent: 'center',
+        backgroundColor:"#f5f5f5"
+
+    },
+    errorText:{
+      color:"red",
+      marginBottom:10
+    },
+    form:{
+      backgroundColor:"white",
+      padding:20,
+      borderRadius:10,
+      shadowColor:"black",
+      textShadowOffset:
+      {
+        width:0,
+        height:2
+      },
+      shadowOpacity:0.25,
+      shadowRadius:4,
+      elevation:5
+    },
+    label:
+    {
+      fontSize:16,
+      marginBottom:5,
+      fontWeight:"bold"
+    },
+    input:
+    {
+      height:40,
+      borderColor:"#ddd",
+      borderWidth:1,
+      marginBottom:15,
+      padding:10,
+      borderRadius:5
+    }
+});
