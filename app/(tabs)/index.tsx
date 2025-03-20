@@ -1,78 +1,25 @@
-import React, { useState } from 'react';
+import React from "react";
 import { registerRootComponent } from 'expo';
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import QRCodeScannerScreen from "../screens/QRCodeScannerScreen";
+import MockQRCodeScreen from "../screens/MockQRCodeScreen";
+import MenuScreen from "../screens/MenuScreen";
+//import MenuScreen from "./screens/MenuScreen"; // You'll create this later
 
-import { View, Text, StyleSheet, Button, KeyboardAvoidingView } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
-import axios from "axios";
+const Stack = createStackNavigator();
 
-function App() 
+const App: React.FC = () => 
 {
-  const [cep, setCEP] = useState("");
-
-
-  const submitHandler = async () =>
-  {
-    const {data} = await axios.get('https://viacep.com.br/ws/01001000/json/');
-    console.log(data);
-  }
-
   return (
-    <KeyboardAvoidingView style={styles.container}>
-      <View style={styles.form}>
-        <Text style={styles.label}>Enter CEP:</Text>
-        <TextInput  
-          style={styles.input} 
-          placeholder='Enter CEP here...'
-          value={cep}
-          onChangeText={setCEP}
-          />
-        <Button title="Login" onPress={()=>{submitHandler()}} />
-      </View>
-    </KeyboardAvoidingView>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="MenuScreen">
+        <Stack.Screen name="QRCodeScanner" component={QRCodeScannerScreen} options={{ title: "Scan QR Code" }} />
+    {/*     <Stack.Screen name="MockQRCodeScanner" component={MockQRCodeScreen} options={{ title: "Mock QR Code" }} /> */}
+        <Stack.Screen name="MenuScreen" component={MenuScreen} options={{ title: "Menu" }} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-// Register the root component
 registerRootComponent(App);
-
-const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        justifyContent: 'center',
-        backgroundColor:"#f5f5f5"
-
-    },
-    errorText:{
-      color:"red",
-      marginBottom:10
-    },
-    form:{
-      backgroundColor:"white",
-      padding:20,
-      borderRadius:10,
-      shadowColor:"black",
-      textShadowOffset:
-      {
-        width:0,
-        height:2
-      },
-      shadowOpacity:0.25,
-      shadowRadius:4,
-      elevation:5
-    },
-    label:
-    {
-      fontSize:16,
-      marginBottom:5,
-      fontWeight:"bold"
-    },
-    input:
-    {
-      height:40,
-      borderColor:"#ddd",
-      borderWidth:1,
-      marginBottom:15,
-      padding:10,
-      borderRadius:5
-    }
-});
