@@ -9,7 +9,7 @@ function App()
 {
   const [userName, setUserName] = useState("");
   const [userPassword, setUserPassword] = useState("");
-  const [errors, setErrors] = useState<{ userName?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ userName?: string; userPassword?: string }>({});
 
 
   const validateForm = () => 
@@ -21,6 +21,17 @@ function App()
     setErrors(errors);
 
     return Object.keys(errors).length === 0;
+  }
+
+  const submitHandler = () =>
+  {
+    if(validateForm())
+    {
+      setUserName("");
+      setUserPassword("");
+
+      setErrors({});
+    }
   }
 
   return (
@@ -45,9 +56,9 @@ function App()
           onChangeText={setUserPassword}
           />
         {
-          errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null
+          errors.userPassword ? <Text style={styles.errorText}>{errors.userPassword}</Text> : null
         }
-        <Button title="Login" onPress={()=>{}} />
+        <Button title="Login" onPress={()=>{submitHandler()}} />
       </View>
     </KeyboardAvoidingView>
   );
