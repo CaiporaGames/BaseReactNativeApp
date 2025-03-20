@@ -3,61 +3,29 @@ import { registerRootComponent } from 'expo';
 
 import { View, Text, StyleSheet, Button, KeyboardAvoidingView } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-
+import axios from "axios";
 
 function App() 
 {
-  const [userName, setUserName] = useState("");
-  const [userPassword, setUserPassword] = useState("");
-  const [errors, setErrors] = useState<{ userName?: string; userPassword?: string }>({});
+  const [cep, setCEP] = useState("");
 
 
-  const validateForm = () => 
+  const submitHandler = async () =>
   {
-    let errors: { userName?: string; userPassword?: string } = {};
-    if(!userName) errors.userName = "User name is required!";
-    if(!userPassword) errors.userPassword = "Password is required!";
-
-    setErrors(errors);
-
-    return Object.keys(errors).length === 0;
-  }
-
-  const submitHandler = () =>
-  {
-    if(validateForm())
-    {
-      setUserName("");
-      setUserPassword("");
-
-      setErrors({});
-    }
+    const {data} = await axios.get('https://viacep.com.br/ws/01001000/json/');
+    console.log(data);
   }
 
   return (
     <KeyboardAvoidingView style={styles.container}>
       <View style={styles.form}>
-        <Text style={styles.label}>Username:</Text>
+        <Text style={styles.label}>Enter CEP:</Text>
         <TextInput  
           style={styles.input} 
-          placeholder='Enter your name...'
-          value={userName}
-          onChangeText={setUserName}
+          placeholder='Enter CEP here...'
+          value={cep}
+          onChangeText={setCEP}
           />
-        {
-          errors.userName ? <Text style={styles.errorText}>{errors.userName}</Text> : null
-        }
-        <Text  style={styles.label}>Password:</Text>
-        <TextInput 
-          style={styles.input} 
-          placeholder='Enter your password...' 
-          secureTextEntry
-          value={userPassword}
-          onChangeText={setUserPassword}
-          />
-        {
-          errors.userPassword ? <Text style={styles.errorText}>{errors.userPassword}</Text> : null
-        }
         <Button title="Login" onPress={()=>{submitHandler()}} />
       </View>
     </KeyboardAvoidingView>
